@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <!-- ✅ Project-specific metadata -->
+  <title>Spurious-Aware Prototype Refinement for Reliable Out-of-Distribution Detection</title>
+
+  <!-- ✅ Mobile-friendly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    /* --- Small global helpers --- */
+    .fake-link { color:#3273dc; text-decoration:none; cursor:default; }
+    .hero .conf-text { color:#e90b0b; font-size:clamp(1.2rem,3.5vw,2.2rem); font-weight:700; letter-spacing:.5px }
+    .publication-title { word-break: break-word; }
+
+    /* Main figure: clean, responsive image */
+    #main-figure .wrap{
+      width: clamp(320px, 70vw, 900px);
+      margin: 0 auto 64px;
+      display:flex; justify-content:center; align-items:center;
+    }
+    #main-figure img{ width:100%; height:auto; display:block }
+
+    /* Responsive YouTube (Bulma) */
+    .video-container{ position:relative; }
+    .video-container .video-wrapper{ position:relative; padding-top:56.25%; } /* 16:9 */
+    .video-container iframe{
+      position:absolute; inset:0; width:100%; height:100%; border:0;
+    }
+
+    /* VISER demo sizing knobs (small on laptops) */
+    #viser-strawberry{ --viser-max: 560px; --viser-vw: 56vw; }
+    #viser-strawberry .wrap{
+      width: clamp(280px, var(--viser-vw), var(--viser-max));
+      margin: 0 auto;
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+      text-align:center;
+    }
+    #viser-strawberry .hero{
+      width:100%; border:2px solid #e9d5ff; background:#fbf7ff; border-radius:18px;
+      padding:16px 18px; box-shadow:0 10px 24px rgba(160,120,255,.12);
+      font:600 1.02rem/1.6 Inter,system-ui,Arial; color:#111;
+      opacity:0; transform:translateY(6px);
+      transition:opacity .45s, transform .45s, max-height .45s, margin .45s, padding .45s;
+      max-height:500px; overflow:hidden;
+    }
+    #viser-strawberry .brand-badge{
+      background:#7c3aed; color:#fff; font-weight:800;
+      border-radius:10px; padding:2px 10px; margin-right:8px; display:inline-block;
+    }
+    #viser-strawberry .hero.hide{ opacity:0; height:0; max-height:0; margin:0; padding:0; border:0; overflow:hidden }
+
+    #viser-strawberry .stage{ width:100%; position:relative; opacity:0; transform:translateY(6px); transition:opacity .45s, transform .45s }
+    #viser-strawberry .stage img{ width:100%; height:auto; display:block; border-radius:18px }
+
+    #viser-strawberry .prompt{ font:600 1rem/1.6 Inter,system-ui; color:#374151; opacity:0; transform:translateY(6px); transition:opacity .45s, transform .45s; width:100% }
+    #viser-strawberry .rows{ opacity:0; transform:translateY(6px); transition:opacity .45s, transform .45s; width:100%; display:flex; flex-direction:column; gap:2px }
+    #viser-strawberry .result{ font-weight:900; font-size:clamp(1.1rem, 2.2vw, 1.8rem); display:flex; justify-content:center; align-items:center; gap:10px; opacity:0; transition:opacity .35s; width:100% }
+    #viser-strawberry .x, #viser-strawberry .tick{ display:inline-block; width:24px; height:24px; border-radius:8px; color:#fff; line-height:24px; text-align:center; font-weight:900 }
+    #viser-strawberry .x{ background:#e74c3c }  .tick{ background:#2ecc71 }
+    #viser-strawberry .muted{ color:#6b7280 }
+
+    #viser-strawberry .lines{
+      position:absolute; left:0; top:0; width:100%; height:0; /* set via JS to img height */
+      pointer-events:none; opacity:0; transition:opacity .4s; border-radius:18px; overflow:hidden;
+    }
+    #viser-strawberry .line{ position:absolute; left:0; right:0; height:2px; background:#111827; opacity:.65; transform:scaleX(0); transform-origin:left }
+    #viser-strawberry .r1{ top:25% } .r2{ top:50% } .r3{ top:75% }
+    #viser-strawberry .lbl{ position:absolute; left:10px; transform:translateY(-50%); font:800 13px/1 Inter; color:#111827; opacity:.95 }
+    #viser-strawberry .c1{ top:12.5% } .c2{ top:37.5% } .c3{ top:62.5% } .c4{ top:87.5% }
+    .grow{ animation:growX .6s ease forwards } @keyframes growX{ from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+    @media (max-width: 520px){
+      #viser-strawberry{ --viser-max: 92vw; --viser-vw: 92vw; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== HERO / TITLE ===== -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Spurious-Aware Prototype Refinement for Reliable Out-of-Distribution Detection</h1>
+
+            <div class="centered">
+              <span class="conf-text">NeurIPS 2025</span>
+            </div>
+
+            <!-- Authors -->
+            <div class="is-size-5 publication-authors">
+              <span class="author-block fake-link">Reihaneh Zohrabi∗<sup>1</sup>,</span>
+              <span class="author-block fake-link">Hosein Hasani∗<sup>1</sup>,</span>
+            </div>
+
+            <div class="is-size-6 publication-authors">
+              <span class="author-block">∗Equal contribution.</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Department of Computer Engineering, Sharif University of Technology</span>
+            </div>
+
+            <!-- Links -->
+            <div class="column has-text-centered" style="margin-top:10px;">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2506.23881" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2506.23881" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <!-- /Links -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /HERO -->
+
+  <!-- ===== Main Figure (clean, responsive) ===== -->
+  <section id="main-figure" aria-label="Main Figure">
+    <div class="wrap">
+      <img src="static/images/graphical_abstract.png" alt="Main Figure" loading="lazy">
+    </div>
+
+  <!-- /VISER Demo -->
+
+  <!-- ===== Abstract ===== -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Despite progress in Vision-Language Models (VLMs), their capacity for visual reasoning is often limited by the
+              <em>binding problem</em>: the failure to reliably associate perceptual features with their correct visual referents.
+              Out-of-distribution (OOD) detection is crucial for ensuring the reliability and safety of machine learning models in real-world applications, where they frequently face data distributions unseen during training.
+Despite progress, existing methods are often vulnerable to spurious correlations that mislead models and compromise robustness. To address this, we propose SPROD, a novel prototype-based OOD detection approach that explicitly addresses the challenge posed by unknown spurious correlations.
+Our post-hoc method refines class prototypes to mitigate bias from spurious features without additional data or hyperparameter tuning, and is broadly applicable across diverse backbones and OOD detection settings.
+We conduct a comprehensive spurious correlation OOD detection benchmarking, comparing our method against existing approaches and demonstrating its superior performance across challenging OOD datasets, such as CelebA, Waterbirds, UrbanCars, Spurious Imagenet, and the newly introduced Animals MetaCoCo. On average, SPROD improves AUROC by 4.8%  and FPR@95 by 9.4% over the second best. 
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /Abstract -->
+
+
+
+</body>
+</html>
